@@ -1,0 +1,62 @@
+<header>
+  <nav
+    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
+  >
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']">CodeForFun.UI.WebMvcCore</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target=".navbar-collapse"
+        aria-label="Toggle navigation"
+        [attr.aria-expanded]="isExpanded"
+        (click)="toggle()"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+        class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
+        [ngClass]="{ show: isExpanded }"
+      >
+        <ul class="navbar-nav flex-grow">
+          <li class="nav-item" *ngIf="isLogged"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/home']" *ngIf="isLogged">Customers</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="isLogged">
+            <a class="nav-link text-dark" [routerLink]="['/counter']">Product details</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="isLogged">
+            <a class="nav-link text-dark" [routerLink]="['/customertable']">Categories</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="isLogged">
+            <a class="nav-link text-dark" [routerLink]="['/products']">Products</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="isLogged">
+            <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Product to customer</a>
+          </li>
+          <li *ngIf="!isLogged" class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" (click)="loginForm = !loginForm;registerForm = false">Login</a>
+          </li>
+          <li class="nav-item" *ngIf="!isLogged" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" (click)="registerForm = !registerForm;loginForm = false">Register</a>
+          </li>
+
+          <div *ngIf="isLogged">
+            <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+              Welcome {{user.name}}
+            </button>
+            <div class="dropdown-menu topsearch text-right">
+              <button class="dropdown-item nav-link" (click)="logout()">LogOut</button>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <app-login *ngIf="!registerForm && loginForm" (user)="logged($event)"></app-login>
+  <app-register *ngIf="!loginForm && registerForm" (user)="logged($event)"></app-register>
+</header>

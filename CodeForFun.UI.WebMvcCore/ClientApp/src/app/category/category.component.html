@@ -1,0 +1,20 @@
+<div class="btn-group col-sm-6">
+  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+    aria-expanded="false">
+    Categories
+  </button>
+  <div class="dropdown-menu" >
+    <ul class="dropdown-item"  (click)="selectCategory('All')" >All</ul>
+    <ng-template #recursiveCategories let-categories>
+      <ul class="dropdown-item" >
+        <li  class="dropdown-item"  *ngFor="let category of categories">
+          <a   (click)="selectCategory(category.name)">{{category.name}}</a>
+          <ul *ngIf="category.inverseParent.length > 0">
+            <ng-container *ngTemplateOutlet="recursiveCategories; context:{ $implicit: category.inverseParent }"></ng-container>
+        </ul>
+        </li>
+      </ul>
+    </ng-template>
+    <ng-container *ngTemplateOutlet="recursiveCategories; context:{ $implicit: categories }"></ng-container>
+  </div>
+</div>

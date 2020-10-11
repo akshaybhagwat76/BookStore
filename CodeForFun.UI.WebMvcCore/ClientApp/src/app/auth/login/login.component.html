@@ -1,0 +1,24 @@
+<div class="login-form" *ngIf="visibility">
+  <form  method="post">
+      <h2 class="text-center">Sign in</h2>		
+      <div class="text-center social-btn">
+          <button (click)="signInWithFB()"  class="btn btn-primary btn-block"><i class="fa fa-facebook"></i> Sign in with <b>Facebook</b></button>
+    <button  (click)="signInWithGoogle()" class="btn btn-danger btn-block"><i class="fa fa-google"></i> Sign in with <b>Google</b></button>
+      </div>
+  <div class="or-seperator"><i>or</i></div>
+      <div class="form-group">
+        <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="model.email" name="username" placeholder="Username" required="required">
+          </div>
+      </div>
+  <div class="form-group">
+          <div class="input-group">
+              <input type="password" class="form-control" [(ngModel)]="model.password" name="password" placeholder="Password" required="required">
+          </div>
+      </div>        
+      <div class="form-group">
+          <button type="submit" (click)="login()" class="btn btn-success btn-block login-btn">Sign in</button>
+      </div>
+      
+  </form>
+</div>
