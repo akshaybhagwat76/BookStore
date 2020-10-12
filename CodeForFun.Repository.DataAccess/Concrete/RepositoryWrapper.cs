@@ -42,6 +42,7 @@ namespace CodeForFun.Repository.DataAccess.Concrete
 		public IUser User => _user ?? new UserRepository(_context);
 
 		public IBooks Books => _books ?? new BooksRepository(_context);
+
 		public IOrders Orders => _orders ?? new OrdersRepository(_context);
 	}
 }

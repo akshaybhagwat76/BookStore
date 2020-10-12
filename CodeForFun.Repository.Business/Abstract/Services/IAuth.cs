@@ -8,8 +8,8 @@ namespace CodeForFun.Repository.Business.Abstract.Services
 {
 	public interface IAuth
 	{
-		SecurityToken Login(string username, string password);
-		string Register(User ss, string password);
+		User Login(string username, string password);
+		string Register(User ss, string password,string roleName);
 
 	}
 }

@@ -2,12 +2,14 @@
 using CodeForFun.Repository.Business.Abstract.Services;
 using CodeForFun.Repository.DataAccess.Abstract;
 using CodeForFun.Repository.DataAccess.DbContexts;
+using CodeForFun.Repository.Entities.Concrete;
 using CodeForFun.UI.WebMvcCore.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -33,7 +35,7 @@ namespace CodeForFun.Repository.Business.Concrete.Managers
 			using (var hmac = new HMACSHA512(passwordSalt))
 			{
 				var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-
+				
 				for (int i = 0; i < computedHash.Length; i++)
 				{
 					if (computedHash[i] != passwordHash[i])
@@ -52,42 +54,68 @@ namespace CodeForFun.Repository.Business.Concrete.Managers
 			}
 		}
 
-		public SecurityToken Login(string username, string password)
+		public User Login(string username, string password)
 		{
 				var p = _repo.User.Get(x => x.Email == username);
 
 			if (p == null)
+			{
 				return null;
+			}
+			else
+			{
+				if (p.Result != null)
+				{
+					p.Result.Role = _context.Roles.Where(x => x.RoleID == p.Result.RoleId).FirstOrDefault();
+				}
+			}
 			if (!VerifyPasswordHash(password, p.Result.PasswordHash, p.Result.PasswordSalt))
 				return null;
-			var claims = new List<Claim>
-		  {
-				new Claim(ClaimTypes.Name,p.Result.Email)
-		   };
+			//var claims = new List<Claim>
+			// {
+			//	new Claim(ClaimTypes.Name,p.Result.Email)
+			//  };
 
 
 
-			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+			//  var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
 
-			var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
+			//var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512Signature);
 
 
 
-			var tokenDescriptor = new SecurityTokenDescriptor
-			{
-				Subject = new ClaimsIdentity(claims),
-				Expires = DateTime.Now.AddHours(1),
-				SigningCredentials = creds
-			};
-			var tokenHandler = new JwtSecurityTokenHandler();
+			//var tokenDescriptor = new SecurityTokenDescriptor
+			//{
+			//	Subject = new ClaimsIdentity(claims),
+			//	Expires = DateTime.Now.AddHours(1),
+			//	SigningCredentials = creds
+			//};
+			//var tokenHandler = new JwtSecurityTokenHandler();
 
-			var token = tokenHandler.CreateToken(tokenDescriptor);
-			return token;
+			//var token = tokenHandler.CreateToken(tokenDescriptor);
+			//return token;
+			return p.Result;
 		}
 
-		public string Register(User ss, string password)
+		public string Register(User ss, string password,string roleName)
 		{
 			var p = _repo.User.Get(x => x.Email == ss.Email);
+			Role role = null;
+			if (!string.IsNullOrEmpty(roleName))
+			{
+				if (roleName.ToLower() == "admin")
+				{
+					role = _context.Roles.Where(x => x.Name.ToLower() == "admin").FirstOrDefault();
+				}
+				else if (roleName.ToLower() == "user")
+				{
+					role = _context.Roles.Where(x => x.Name.ToLower() == "user").FirstOrDefault();
+				}
+				else
+				{
+					role = _context.Roles.Where(x => x.Name.ToLower() == "employee").FirstOrDefault();
+				}
+			}
 
 			if (p!=null && p.Result == null)
 			{
@@ -98,7 +126,7 @@ namespace CodeForFun.Repository.Business.Concrete.Managers
 					CreatePasswordHast(password, out byte[] passwordHash, out byte[] passwordSalt);
 					ss.PasswordHash = passwordHash;
 					ss.PasswordSalt = passwordSalt;
-					ss.RoleId = ss.RoleId;
+					ss.RoleId = role.RoleID;
 					_repo.User.Create(ss);
 
 				}

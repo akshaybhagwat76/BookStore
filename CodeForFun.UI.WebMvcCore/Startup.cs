@@ -23,6 +23,7 @@ using CodeForFun.Repository.DataAccess.DbContexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CodeForFun.UI.WebMvcCore.Utility;
 
 namespace CodeForFun.UI.WebMvcCore
 {
@@ -49,23 +50,24 @@ namespace CodeForFun.UI.WebMvcCore
 
             services.AddDbContext<RepositoryContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddJwt(Configuration);
 
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                          // установка ключа безопасности
-                          IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
-                          // валидация ключа безопасности
-                          ValidateIssuerSigningKey = true,
-                    };
-                });
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.SaveToken = true;
+            //        options.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            ValidateIssuer = true,
+            //            ValidateAudience = true,
+            //            ValidateLifetime = true,
+            //              // установка ключа безопасности
+            //              IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+            //              // валидация ключа безопасности
+            //              ValidateIssuerSigningKey = true,
+            //        };
+            //    });
 
 
             services.AddCors(options =>
@@ -97,6 +99,8 @@ namespace CodeForFun.UI.WebMvcCore
             services.AddScoped<IAuth, AuthManager>();
             services.AddTransient<IProductsToCustomer, ProductsToCustomerManager>();
             services.AddScoped<IProductDetailsService, ProductDetailsManager>();
+            services.AddScoped<IJwtHandler, JwtHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -11,6 +11,8 @@ namespace CodeForFun.Repository.DataAccess.Abstract
 	{
 		public Role GetUserRole();
 		public bool CheckRole(string username, string role);
+		public Role GetAdminRole();
+		public Role GetEmployeeRole();
 
 	}
 }

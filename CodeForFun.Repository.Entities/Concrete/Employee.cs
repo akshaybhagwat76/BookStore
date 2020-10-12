@@ -7,7 +7,7 @@ using System.Text;
 namespace CodeForFun.Repository.Entities.Concrete
 {
     [Table("Employee")]
-    public class Employee
+    public class coEmployee
     {
         [Key]
         public int Id { get; set; }

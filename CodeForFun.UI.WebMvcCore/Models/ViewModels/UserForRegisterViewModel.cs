@@ -1,4 +1,6 @@
-﻿namespace CodeForFun.UI.WebMvcCore.Models.ViewModels
+﻿using System;
+
+namespace CodeForFun.UI.WebMvcCore.Models.ViewModels
 {
 	public class UserForRegisterViewModel
 	{

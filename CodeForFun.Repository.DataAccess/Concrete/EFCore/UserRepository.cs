@@ -27,8 +27,18 @@ namespace CodeForFun.Repository.DataAccess.Concrete.EFCore
 
         public Role GetUserRole()
         {
-            return _context.Roles.Where(x => x.Name == "User").FirstOrDefault();
+            return _context.Roles.Where(x => x.Name.ToLower() == "user").FirstOrDefault();
         }
+
+        public Role GetAdminRole()
+        {
+            return _context.Roles.Where(x => x.Name.ToLower() == "admin").FirstOrDefault();
+        }
+        public Role GetEmployeeRole()
+        {
+            return _context.Roles.Where(x => x.Name.ToLower() == "employee").FirstOrDefault();
+        }
+
 
     }
 }

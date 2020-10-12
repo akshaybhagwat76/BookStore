@@ -8,6 +8,7 @@ using CodeForFun.Repository.DataAccess.DbContexts;
 using CodeForFun.Repository.Entities.Concrete;
 using CodeForFun.UI.WebMvcCore.Models;
 using CodeForFun.UI.WebMvcCore.Models.ViewModels;
+using CodeForFun.UI.WebMvcCore.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -20,12 +21,13 @@ namespace CodeForFun.UI.WebMvcCore.Controllers
     public class AccountController : ControllerBase
     {
         private IAuth _auth;
-        private readonly IRoleService _roleService;
+        private readonly IJwtHandler jwtHandler;
 
-        public AccountController(IAuth auth, IRoleService roleService)
+        public AccountController(IAuth auth, IJwtHandler jwtHandler)
         {
             _auth = auth;
-            _roleService = roleService;
+            this.jwtHandler = jwtHandler;
+
         }
 
         // POST: api/Account
@@ -34,16 +36,6 @@ namespace CodeForFun.UI.WebMvcCore.Controllers
         public async Task<IActionResult> Post([FromBody] UserForRegisterViewModel userForRegister)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            int RoleId = 0;
-            if (userForRegister != null && !string.IsNullOrEmpty(userForRegister.RoleName))
-            {
-                Role role = await _roleService.GetByName(userForRegister.RoleName);
-
-                if (role != null && role.RoleID > 0)
-                {
-                    RoleId = role.RoleID;
-                }
-            }
 
             var user = new User
             {
@@ -51,12 +43,11 @@ namespace CodeForFun.UI.WebMvcCore.Controllers
                 Password = userForRegister.Password,
                 Name = userForRegister.Name,
                 Surname = userForRegister.Surname,
-                RoleId = RoleId
             };
 
             try
             {
-                var isReg = _auth.Register(user, user.Password);
+                var isReg = _auth.Register(user, user.Password,userForRegister.RoleName);
 
                 if (isReg == "")
                     throw new Exception();
@@ -67,11 +58,14 @@ namespace CodeForFun.UI.WebMvcCore.Controllers
             }
 
             var token = _auth.Login(user.Email, user.Password);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token)
-            });
+            string roleName = token.Role.Name;
+            Guid userId = token.UserID;
+            string name = token.Name;
+            //return Ok(new
+            //{
+            //    token = tokenHandler.WriteToken(token)
+            //});
+            return Ok(jwtHandler.Create(userId, roleName, name));
 
         }
 
@@ -85,10 +79,16 @@ namespace CodeForFun.UI.WebMvcCore.Controllers
             if (token == null)
                 return Unauthorized();
 
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token)
-            });
+
+            string roleName = token.Role.Name;
+            Guid userId = token.UserID;
+            string name = token.Name;
+
+            //return Ok(new
+            //{
+            //    token = tokenHandler.WriteToken(token)
+            //});
+            return Ok(jwtHandler.Create(userId, Enum.GetName(typeof(Utility.Role), roleName), name));
         }
     }
 }
