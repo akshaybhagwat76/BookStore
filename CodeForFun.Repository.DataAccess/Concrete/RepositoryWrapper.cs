@@ -21,7 +21,8 @@ namespace CodeForFun.Repository.DataAccess.Concrete
 		private IProductDetails _productDetails;
 		private IProductsToCustomers _productsToCustomers;
 		private IBooks _books;
-		
+		private IOrders _orders;
+
 		public RepositoryWrapper(RepositoryContext context = null)
 		{
 			_context = context ?? new RepositoryContext();
@@ -41,5 +42,6 @@ namespace CodeForFun.Repository.DataAccess.Concrete
 		public IUser User => _user ?? new UserRepository(_context);
 
 		public IBooks Books => _books ?? new BooksRepository(_context);
+		public IOrders Orders => _orders ?? new OrdersRepository(_context);
 	}
 }

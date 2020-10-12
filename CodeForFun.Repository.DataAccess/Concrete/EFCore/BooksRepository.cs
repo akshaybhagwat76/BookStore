@@ -1,6 +1,4 @@
-﻿
-using CodeForFun.Core;
-using CodeForFun.Core.DataAccess.EFCore;
+﻿using CodeForFun.Core.DataAccess.EFCore;
 using CodeForFun.Repository.DataAccess.Abstract;
 using CodeForFun.Repository.DataAccess.DbContexts;
 using CodeForFun.Repository.Entities.Concrete;

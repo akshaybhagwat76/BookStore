@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CodeForFun.Core.Entities;
-
 namespace CodeForFun.Core
 {
     public interface IEntityRepository<T> where T : class, new()

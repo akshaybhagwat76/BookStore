@@ -24,7 +24,7 @@ namespace CodeForFun.Repository.DataAccess.DbContexts
 			if (!this.Roles.Any())
 			{
 				this.Roles.Add(new Role { Name = "Admin" });
-				this.Roles.Add(new Role { Name = "Member" });
+				this.Roles.Add(new Role { Name = "Employee" });
 				this.Roles.Add(new Role { Name = "User" });
 			}
 			this.SaveChanges();
@@ -43,7 +43,7 @@ namespace CodeForFun.Repository.DataAccess.DbContexts
 		public DbSet<Product> Products { get; set; }
 		public DbSet<ProductDetail> ProductDetails { get; set; }
 		public DbSet<ProductsToCustomer> ProductsToCustomers { get; set; }
-
+		public DbSet<Orders> Orders { get; set; }
 		public DbSet<Books> Books { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -134,8 +134,12 @@ namespace CodeForFun.Repository.DataAccess.DbContexts
 	  RoleID = 1, // Must be != 0
       Name = "Admin",
    },
-   new Role {
+	  new Role {
 	  RoleID = 2, // Must be != 0
+      Name = "Employee",
+   },
+   new Role {
+	  RoleID = 3, // Must be != 0
       Name = "User",
    }
 });

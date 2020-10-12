@@ -13,5 +13,6 @@ namespace CodeForFun.Repository.DataAccess.Abstract
 		IUser User { get; }
 		IProductsToCustomers ProductsToCustomers { get; }
 		IBooks Books { get; }
+		IOrders Orders { get; }
 	}
 }

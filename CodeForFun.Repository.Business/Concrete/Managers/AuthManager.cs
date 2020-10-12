@@ -98,10 +98,8 @@ namespace CodeForFun.Repository.Business.Concrete.Managers
 					CreatePasswordHast(password, out byte[] passwordHash, out byte[] passwordSalt);
 					ss.PasswordHash = passwordHash;
 					ss.PasswordSalt = passwordSalt;
-					ss.RoleId = _repo.User.GetUserRole().RoleID;
-
+					ss.RoleId = ss.RoleId;
 					_repo.User.Create(ss);
-
 
 				}
 				catch (Exception ex) { throw ex; }
